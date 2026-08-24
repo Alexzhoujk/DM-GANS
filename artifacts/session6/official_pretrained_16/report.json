@@ -1,0 +1,58 @@
+{
+  "provenance": "Author-released bird_DMGAN.pth; not trained by this project",
+  "seed": 20260824,
+  "captions": [
+    "this is a small light gray bird with a small head and green crown, nape and some green coloring on its wings",
+    "this is a blue bird with a white throat, breast, belly and abdomen and a small black pointed beak",
+    "this small bird has a deep blue crown, back and rump and a bright white belly",
+    "this bird is red and white in color with a stubby beak and red eye rings",
+    "this bird is yellow with black on its head and has a very short beak",
+    "yellow abdomen with a black eye without an eye ring and beak quite short",
+    "the bird has a yellow crown and a black eyering that is round",
+    "this bird has a white belly and breast with a short pointy bill",
+    "this bird is red with white and has a very short beak",
+    "this bird has a green crown black primaries and a white belly",
+    "this bird has wings that are black and has a white belly",
+    "this bird has wings that are red and has a yellow belly",
+    "this bird has wings that are blue and has a red belly",
+    "his bird is black with white and has a very short beak",
+    "this bird has wings that are black and has a white belly",
+    "a small red and white bird with a small curved beak"
+  ],
+  "image_shapes": [
+    [
+      16,
+      3,
+      64,
+      64
+    ],
+    [
+      16,
+      3,
+      128,
+      128
+    ],
+    [
+      16,
+      3,
+      256,
+      256
+    ]
+  ],
+  "attention_shapes": {
+    "128": [
+      16,
+      18,
+      64,
+      64
+    ],
+    "256": [
+      16,
+      18,
+      128,
+      128
+    ]
+  },
+  "generator_checkpoint": "checkpoints/bird_DMGAN.pth",
+  "text_checkpoint": "checkpoints/DAMSMencoders/bird/text_encoder200.pth"
+}

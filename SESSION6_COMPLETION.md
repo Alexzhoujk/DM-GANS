@@ -1,0 +1,208 @@
+# DM-GAN Session 6 Completion Report
+
+This document records what was completed for the four-person DM-GAN
+reproduction plan and clearly separates official-checkpoint evidence from the
+modern local reimplementation.
+
+## Outcome
+
+The Session 6 minimum objective has been met: the complete reproduction path is
+runnable on CUB-200-2011, and the project can show official-checkpoint inference,
+a real-batch forward/loss/backward step, and a locally trained 200-step progress
+checkpoint.
+
+The project does **not** claim a full DM-GAN reproduction score yet. Full
+training and local FID, Inception Score, and R-precision remain future work.
+
+## Work completed against the four-person plan
+
+| Owner | Planned module | Completed work | Status |
+| --- | --- | --- | --- |
+| A | Dataset and preprocessing | CUB images and caption metadata; train/test split; bounding-box crop; resize and normalization; DataLoader outputs for images, captions, caption lengths, class IDs, and keys | Session 6 target complete |
+| B | Text encoder / DAMSM | Official pretrained DAMSM encoder loading; 5,450-word vocabulary/checkpoint compatibility; word and sentence embeddings; frozen evaluation path | Complete |
+| C | DM-GAN model | Conditioning augmentation; 64/128/256 generator; dynamic-memory writing, reading, and response gates; D64/D128/D256; attention and diagnostic tensors | Complete |
+| D | Environment, training, and evaluation | Modern PyTorch/CUDA environment; official checkpoint inference; G/D losses; DAMSM matching; KL loss; backward; optimizer; EMA; checkpointing; fixed samples; 200-step loss log | Session 6 target complete; final metrics pending |
+
+The integrated interface has also been verified end to end:
+
+```text
+CUB Dataset / Captions
+  -> pretrained DAMSM word and sentence features
+  -> DM-GAN generator and three discriminators
+  -> GAN + DAMSM + KL losses
+  -> backward + optimizer + checkpoint
+```
+
+## Implementation delivered
+
+The modern implementation lives in [`dmgan/`](dmgan/) and includes:
+
+- `models.py`: conditioning augmentation, initial generator, dynamic-memory
+  refinement, and three discriminators;
+- `damsm.py`: official DAMSM-compatible text/image encoder loading and matching;
+- `losses.py`: conditional/unconditional adversarial, word/sentence matching,
+  and KL losses;
+- `data.py`: official CUB metadata, image preprocessing, and batching;
+- `training.py`: discriminator/generator steps, optimizers, and EMA;
+- `checkpoints.py`: local and official checkpoint compatibility;
+- `part_aware.py`: optional part-aware alignment loss prototype.
+
+The implementation restores baseline details that materially affect fidelity:
+
+- no Transformer-style `1/sqrt(d)` scaling in dynamic-memory addressing;
+- detached current-image summary during memory writing;
+- spectral normalization in discriminator feature and joint convolutions;
+- conditional and unconditional discriminator heads;
+- word-level and sentence-level DAMSM matching losses;
+- the official code path's effective KL weight of 1.
+
+`BCEWithLogitsLoss` replaces the old Sigmoid-plus-BCE pair. This is numerically
+safer while remaining mathematically equivalent.
+
+## Verification completed
+
+### Automated checks
+
+- 7 unit tests pass.
+- Ruff static checks pass.
+- Full-channel generator/discriminator smoke test passes on CUDA.
+- Verified runtime: NVIDIA RTX 5080, PyTorch 2.12.0+cu130, CUDA 13.0.
+- Generator outputs have shapes `[B,3,64,64]`, `[B,3,128,128]`, and
+  `[B,3,256,256]`.
+- Masked attention words receive zero probability.
+- Attention normalizes over valid words.
+- Writing and response gates remain in `[0,1]`.
+
+The full-channel smoke report is available at
+[`artifacts/session6/smoke_full.json`](artifacts/session6/smoke_full.json).
+
+### Official pretrained inference
+
+The author-released `bird_DMGAN.pth` checkpoint and pretrained DAMSM text
+encoder were loaded successfully. These images were generated locally, but the
+weights were **not trained by this project**.
+
+- [Four-prompt 256 px grid](artifacts/session6/official_pretrained/official_checkpoint_grid_256.png)
+- [Four-prompt inference report](artifacts/session6/official_pretrained/report.json)
+- [Sixteen-prompt 256 px grid](artifacts/session6/official_pretrained_16/official_checkpoint_grid_256.png)
+- [Sixteen-prompt inference report](artifacts/session6/official_pretrained_16/report.json)
+
+### Real CUB integration
+
+One real CUB batch completed DAMSM encoding, all generator/discriminator losses,
+backpropagation, optimizer updates, and checkpoint creation.
+
+- [Real CUB batch](artifacts/session6/real_integration/real_cub_batch_256.png)
+- [Integration report](artifacts/session6/real_integration/report.json)
+
+The random-initialization output from this step is not included as a quality
+result.
+
+### Local 200-step training run
+
+The modern reimplementation trained for 200 optimizer steps with batch size 10.
+The run saved a checkpoint, fixed-caption samples, and a loss history.
+
+- [Before short run](artifacts/session6/short_run/local_untrained_fixed_256.png)
+- [After 200 steps](artifacts/session6/short_run/local_after_short_run_fixed_256.png)
+- [Run summary](artifacts/session6/short_run/summary.json)
+- [Loss history](artifacts/session6/short_run/loss_history.json)
+
+The output contains early colored structure but is **pipeline/training-progress
+evidence, not a quality result**.
+
+## Baseline investigation
+
+A small hand-inspected set of 16 official-checkpoint prompts suggests that
+global color is often captured better than precise part relationships. Observed
+issues include weak eye rings, weak head-color localization, ambiguous
+wing/belly placement, and weak beak geometry. These are qualitative findings,
+not benchmark statistics.
+
+For the caption `this bird has wings that are red and has a yellow belly`, the
+project saved the official generated image plus word-level attention and writing
+gate diagnostics:
+
+- [Diagnostic report](artifacts/session6/diagnostics/red_wings/report.json)
+- [Official 256 px output](artifacts/session6/diagnostics/red_wings/official_256.png)
+- [Attention: wings](artifacts/session6/diagnostics/red_wings/attention_256_03_wings.png)
+- [Attention: red](artifacts/session6/diagnostics/red_wings/attention_256_06_red.png)
+- [Attention: yellow](artifacts/session6/diagnostics/red_wings/attention_256_10_yellow.png)
+- [Attention: belly](artifacts/session6/diagnostics/red_wings/attention_256_11_belly.png)
+
+The complete written analysis is in
+[`docs/failure_analysis.md`](docs/failure_analysis.md).
+
+## Potential improvement
+
+An optional part-aware alignment loss is implemented and unit-tested. It uses
+CUB part annotations to create differentiable heatmaps and align attribute-word
+attention with head, wing, breast, belly, and tail regions.
+
+This prototype is disabled in the baseline. No performance improvement is
+claimed because the controlled baseline/variant ablation has not been run.
+
+## Presentation delivered
+
+The updated ten-slide deck is available at
+[`outputs/DM-GAN Baseline Implementation and Investigation - Session 6 Updated.pptx`](outputs/DM-GAN%20Baseline%20Implementation%20and%20Investigation%20-%20Session%206%20Updated.pptx).
+
+The deck includes:
+
+- A/B/C/D implementation progress;
+- official-checkpoint inference labeled separately from local training;
+- real-batch and 200-step verification status;
+- observed baseline limitations;
+- the part-aware improvement hypothesis;
+- remaining longer-run training and evaluation work.
+
+All ten slides were rendered and checked. No content overflow or template
+fidelity issue was detected.
+
+## Reproduce the checks
+
+Create the environment described in [`README.md`](README.md), then run:
+
+```bash
+.venv/bin/python -m pytest
+.venv/bin/ruff check .
+.venv/bin/python scripts/smoke_test.py --device cuda --full-channels
+```
+
+Inspect the environment and available GPU with:
+
+```bash
+.venv/bin/python scripts/inspect_environment.py
+```
+
+Official assets can be prepared with `scripts/prepare_official_assets.py`.
+CUB images must be obtained from the official CUB-200-2011 source and placed at
+`data/birds/CUB_200_2011/`. Datasets and checkpoints are intentionally excluded
+from Git.
+
+The main runnable entry points are:
+
+```bash
+.venv/bin/python scripts/infer_official_checkpoint.py --help
+.venv/bin/python scripts/session6_real_step.py --help
+.venv/bin/python scripts/train_short_run.py --help
+.venv/bin/python scripts/diagnose_official_caption.py --help
+```
+
+## Repository exclusions
+
+The following files are deliberately not uploaded:
+
+- CUB images and caption archives;
+- author-released DAMSM and DM-GAN weights;
+- `.venv/` and generated Python caches;
+- local `.pt` checkpoints (approximately 648 MB each);
+- scratch files and full unfiltered experiment outputs.
+
+## Remaining work
+
+- extend the locally trained baseline beyond 200 steps;
+- evaluate one fixed checkpoint with FID, Inception Score, and R-precision;
+- expand the fixed-prompt failure taxonomy;
+- train a fixed-budget `baseline` versus `baseline + part-aware loss` ablation;
+- complete a timed 9:30-10:00 presentation rehearsal.

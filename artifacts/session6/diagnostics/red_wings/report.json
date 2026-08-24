@@ -1,0 +1,169 @@
+{
+  "provenance": "Author-released checkpoint diagnostic",
+  "caption": "this bird has wings that are red and has a yellow belly",
+  "tokens": [
+    "this",
+    "bird",
+    "has",
+    "wings",
+    "that",
+    "are",
+    "red",
+    "and",
+    "has",
+    "a",
+    "yellow",
+    "belly"
+  ],
+  "seed": 20260824,
+  "stages": {
+    "128": [
+      {
+        "token": "this",
+        "writing_gate": 0.34390270709991455,
+        "attention_mean": 0.04859688878059387,
+        "attention_max": 0.17630162835121155
+      },
+      {
+        "token": "bird",
+        "writing_gate": 0.25304925441741943,
+        "attention_mean": 0.36754310131073,
+        "attention_max": 0.996060311794281
+      },
+      {
+        "token": "has",
+        "writing_gate": 0.22354961931705475,
+        "attention_mean": 0.0935782939195633,
+        "attention_max": 0.5988144278526306
+      },
+      {
+        "token": "wings",
+        "writing_gate": 0.3193170428276062,
+        "attention_mean": 0.023439913988113403,
+        "attention_max": 0.22614853084087372
+      },
+      {
+        "token": "that",
+        "writing_gate": 0.3902650773525238,
+        "attention_mean": 0.029703602194786072,
+        "attention_max": 0.42737558484077454
+      },
+      {
+        "token": "are",
+        "writing_gate": 0.37612706422805786,
+        "attention_mean": 0.03703789785504341,
+        "attention_max": 0.6693141460418701
+      },
+      {
+        "token": "red",
+        "writing_gate": 0.33882635831832886,
+        "attention_mean": 0.019599882885813713,
+        "attention_max": 0.21095286309719086
+      },
+      {
+        "token": "and",
+        "writing_gate": 0.43351083993911743,
+        "attention_mean": 0.01616664230823517,
+        "attention_max": 0.3228408098220825
+      },
+      {
+        "token": "has",
+        "writing_gate": 0.41812634468078613,
+        "attention_mean": 0.027008457109332085,
+        "attention_max": 0.21800290048122406
+      },
+      {
+        "token": "a",
+        "writing_gate": 0.3699938952922821,
+        "attention_mean": 0.01480301283299923,
+        "attention_max": 0.17379646003246307
+      },
+      {
+        "token": "yellow",
+        "writing_gate": 0.22203034162521362,
+        "attention_mean": 0.03210508078336716,
+        "attention_max": 0.3490816056728363
+      },
+      {
+        "token": "belly",
+        "writing_gate": 0.3394959270954132,
+        "attention_mean": 0.29041725397109985,
+        "attention_max": 0.9984933137893677
+      }
+    ],
+    "256": [
+      {
+        "token": "this",
+        "writing_gate": 0.39308983087539673,
+        "attention_mean": 0.1253097802400589,
+        "attention_max": 0.895061731338501
+      },
+      {
+        "token": "bird",
+        "writing_gate": 0.24331842362880707,
+        "attention_mean": 0.07787169516086578,
+        "attention_max": 0.26999878883361816
+      },
+      {
+        "token": "has",
+        "writing_gate": 0.14730389416217804,
+        "attention_mean": 0.14643925428390503,
+        "attention_max": 0.29365774989128113
+      },
+      {
+        "token": "wings",
+        "writing_gate": 0.18503068387508392,
+        "attention_mean": 0.11824687570333481,
+        "attention_max": 0.23310698568820953
+      },
+      {
+        "token": "that",
+        "writing_gate": 0.36091136932373047,
+        "attention_mean": 0.0374557301402092,
+        "attention_max": 0.16412903368473053
+      },
+      {
+        "token": "are",
+        "writing_gate": 0.28307339549064636,
+        "attention_mean": 0.05927031487226486,
+        "attention_max": 0.14272746443748474
+      },
+      {
+        "token": "red",
+        "writing_gate": 0.38755056262016296,
+        "attention_mean": 0.0921197161078453,
+        "attention_max": 0.7231014966964722
+      },
+      {
+        "token": "and",
+        "writing_gate": 0.16114693880081177,
+        "attention_mean": 0.1245337575674057,
+        "attention_max": 0.35216063261032104
+      },
+      {
+        "token": "has",
+        "writing_gate": 0.18735919892787933,
+        "attention_mean": 0.08586159348487854,
+        "attention_max": 0.1728472113609314
+      },
+      {
+        "token": "a",
+        "writing_gate": 0.28657129406929016,
+        "attention_mean": 0.03389344364404678,
+        "attention_max": 0.1101808175444603
+      },
+      {
+        "token": "yellow",
+        "writing_gate": 0.37597015500068665,
+        "attention_mean": 0.04974664747714996,
+        "attention_max": 0.5801606774330139
+      },
+      {
+        "token": "belly",
+        "writing_gate": 0.34303611516952515,
+        "attention_mean": 0.049251168966293335,
+        "attention_max": 0.3050996959209442
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "provenance": "Author-released bird_DMGAN.pth; not trained by this project",
+  "seed": 20260824,
+  "captions": [
+    "the bird has a yellow crown and a black eyering that is round",
+    "this bird is red with white and has a very short beak",
+    "this bird has a green crown black primaries and a white belly",
+    "this bird has wings that are black and has a white belly"
+  ],
+  "image_shapes": [
+    [
+      4,
+      3,
+      64,
+      64
+    ],
+    [
+      4,
+      3,
+      128,
+      128
+    ],
+    [
+      4,
+      3,
+      256,
+      256
+    ]
+  ],
+  "attention_shapes": {
+    "128": [
+      4,
+      18,
+      64,
+      64
+    ],
+    "256": [
+      4,
+      18,
+      128,
+      128
+    ]
+  },
+  "generator_checkpoint": "checkpoints/bird_DMGAN.pth",
+  "text_checkpoint": "checkpoints/DAMSMencoders/bird/text_encoder200.pth"
+}
