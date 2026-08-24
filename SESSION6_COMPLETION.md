@@ -6,13 +6,17 @@ modern local reimplementation.
 
 ## Outcome
 
-The Session 6 minimum objective has been met: the complete reproduction path is
-runnable on CUB-200-2011, and the project can show official-checkpoint inference,
-a real-batch forward/loss/backward step, and a locally trained 200-step progress
-checkpoint.
+The Session 6 objective has been met: the complete reproduction path is runnable
+on CUB-200-2011, and the author-released checkpoint produces comparable metrics
+through the modern implementation. A fixed 30,000-sample evaluation reached
+PyTorch FID 15.7576 and DAMSM R-precision 76.67% ± 0.83%, close to the official
+pretrained references of 15.34 and 76.58% ± 0.53%.
 
-The project does **not** claim a full DM-GAN reproduction score yet. Full
-training and local FID, Inception Score, and R-precision remain future work.
+This is sufficient to judge the baseline reproduction **reasonable**. The claim
+is limited to author-weight inference through the modern code path. The local
+200-step random-initialization checkpoint is still training-pipeline evidence,
+not a converged quality result. The part-aware improvement has not yet been
+tested for efficacy.
 
 ## Work completed against the four-person plan
 
@@ -21,7 +25,7 @@ training and local FID, Inception Score, and R-precision remain future work.
 | A | Dataset and preprocessing | CUB images and caption metadata; train/test split; bounding-box crop; resize and normalization; DataLoader outputs for images, captions, caption lengths, class IDs, and keys | Session 6 target complete |
 | B | Text encoder / DAMSM | Official pretrained DAMSM encoder loading; 5,450-word vocabulary/checkpoint compatibility; word and sentence embeddings; frozen evaluation path | Complete |
 | C | DM-GAN model | Conditioning augmentation; 64/128/256 generator; dynamic-memory writing, reading, and response gates; D64/D128/D256; attention and diagnostic tensors | Complete |
-| D | Environment, training, and evaluation | Modern PyTorch/CUDA environment; official checkpoint inference; G/D losses; DAMSM matching; KL loss; backward; optimizer; EMA; checkpointing; fixed samples; 200-step loss log | Session 6 target complete; final metrics pending |
+| D | Environment, training, and evaluation | Modern PyTorch/CUDA environment; official checkpoint inference; G/D losses; DAMSM matching; KL loss; backward; optimizer; EMA; checkpointing; fixed samples; 200-step loss log; 30,000-sample FID/R-precision evaluation | Baseline validation complete |
 
 The integrated interface has also been verified end to end:
 
@@ -45,6 +49,8 @@ The modern implementation lives in [`dmgan/`](dmgan/) and includes:
 - `data.py`: official CUB metadata, image preprocessing, and batching;
 - `training.py`: discriminator/generator steps, optimizers, and EMA;
 - `checkpoints.py`: local and official checkpoint compatibility;
+- `metrics.py`: repository-compatible FID, modern ImageNet IS, and DAMSM
+  R-precision calculations;
 - `part_aware.py`: optional part-aware alignment loss prototype.
 
 The implementation restores baseline details that materially affect fidelity:
@@ -63,7 +69,7 @@ safer while remaining mathematically equivalent.
 
 ### Automated checks
 
-- 7 unit tests pass.
+- 11 unit tests pass.
 - Ruff static checks pass.
 - Full-channel generator/discriminator smoke test passes on CUDA.
 - Verified runtime: NVIDIA RTX 5080, PyTorch 2.12.0+cu130, CUDA 13.0.
@@ -86,6 +92,26 @@ weights were **not trained by this project**.
 - [Four-prompt inference report](artifacts/session6/official_pretrained/report.json)
 - [Sixteen-prompt 256 px grid](artifacts/session6/official_pretrained_16/official_checkpoint_grid_256.png)
 - [Sixteen-prompt inference report](artifacts/session6/official_pretrained_16/report.json)
+
+### Formal baseline reproduction evaluation
+
+The author-released generator, DAMSM text encoder, and DAMSM image encoder were
+loaded strictly and evaluated on 30,000 fixed CUB test samples.
+
+| Metric | Modern reproduction | Official pretrained reference | Decision |
+| --- | ---: | ---: | --- |
+| PyTorch FID ↓ | 15.7576 | 15.34 | PASS (`<= 22`) |
+| DAMSM R-precision ↑ | 76.67% ± 0.83% | 76.58% ± 0.53% | PASS (`>= 70%`) |
+| ImageNet IS ↑ | 5.7007 ± 0.0940 | Not applicable | Internal health check only |
+
+The ImageNet IS is not paper-comparable because the paper used a legacy
+50-class TensorFlow bird classifier. The comparable FID and R-precision values,
+strict checkpoint loading, and full inference path support a **PASS** verdict
+for baseline reasonableness.
+
+- [Evaluation methodology and conclusion](artifacts/session6/baseline_evaluation/BASELINE_EVALUATION.md)
+- [Machine-readable results and checkpoint checksums](artifacts/session6/baseline_evaluation/report.json)
+- [Generated sample preview](artifacts/session6/baseline_evaluation/official_baseline_preview_256.png)
 
 ### Real CUB integration
 
@@ -140,7 +166,8 @@ CUB part annotations to create differentiable heatmaps and align attribute-word
 attention with head, wing, breast, belly, and tail regions.
 
 This prototype is disabled in the baseline. No performance improvement is
-claimed because the controlled baseline/variant ablation has not been run.
+claimed because the controlled baseline/variant ablation has not been run. That
+efficacy experiment is the planned next-week task.
 
 ## Presentation delivered
 
@@ -151,10 +178,10 @@ The deck includes:
 
 - A/B/C/D implementation progress;
 - official-checkpoint inference labeled separately from local training;
-- real-batch and 200-step verification status;
-- observed baseline limitations;
+- real-batch, 200-step, and 30,000-sample verification status;
+- comparable FID/R-precision results and the baseline PASS verdict;
 - the part-aware improvement hypothesis;
-- remaining longer-run training and evaluation work.
+- next week's controlled part-aware ablation.
 
 All ten slides were rendered and checked. No content overflow or template
 fidelity issue was detected.
@@ -187,6 +214,7 @@ The main runnable entry points are:
 .venv/bin/python scripts/session6_real_step.py --help
 .venv/bin/python scripts/train_short_run.py --help
 .venv/bin/python scripts/diagnose_official_caption.py --help
+.venv/bin/python scripts/evaluate_baseline.py --help
 ```
 
 ## Repository exclusions
@@ -201,8 +229,10 @@ The following files are deliberately not uploaded:
 
 ## Remaining work
 
-- extend the locally trained baseline beyond 200 steps;
-- evaluate one fixed checkpoint with FID, Inception Score, and R-precision;
-- expand the fixed-prompt failure taxonomy;
-- train a fixed-budget `baseline` versus `baseline + part-aware loss` ablation;
+- next week, train an equal-budget `baseline` versus `baseline + part-aware loss`
+  ablation using the frozen evaluation protocol;
+- compare FID, DAMSM R-precision, and part-attribute accuracy, then report
+  trade-offs without treating the modern ImageNet IS as paper-comparable;
+- optionally extend the local from-scratch baseline beyond 200 steps before the
+  ablation if the agreed compute budget requires it;
 - complete a timed 9:30-10:00 presentation rehearsal.

@@ -1,0 +1,60 @@
+{
+  "status": "complete",
+  "provenance": "Author-released bird_DMGAN.pth executed through the modern reimplementation",
+  "sample_count": 30000,
+  "seed": 20260824,
+  "device": "cuda",
+  "torch": "2.12.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "protocol": {
+    "split": "official CUB test metadata",
+    "resolution": 256,
+    "fid": "DM-GAN repository PyTorch-FID preprocessing + author bird_val.npz",
+    "r_precision": "official DAMSM; correct caption vs 99 other-class captions",
+    "is": "torchvision ImageNet Inception-v3; not comparable to legacy CUB bird IS"
+  },
+  "checkpoints": {
+    "generator": {
+      "path": "checkpoints/bird_DMGAN.pth",
+      "sha256": "444c9e43da1314fec6f6823eb995547312a9f7ecd2d50bf39d383fe0593bab55"
+    },
+    "text_encoder": {
+      "path": "checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "image_encoder": {
+      "path": "checkpoints/DAMSMencoders/bird/image_encoder200.pth",
+      "sha256": "459e25c9f9842c5754002cba15addaf66c7c618aa5bb87dea968b0ac3e3b2d5b"
+    },
+    "fid_stats": {
+      "path": "checkpoints/eval/bird_val.npz",
+      "sha256": "6ef8414fe0ad80ee87ff52e9d1142869b5a9952c34c4a5d518a060a7fa3a4c47"
+    }
+  },
+  "results": {
+    "fid_pytorch": 15.757606076792655,
+    "is_imagenet_mean": 5.700666007644175,
+    "is_imagenet_std": 0.09401291775958419,
+    "r_precision_overall_percent": 76.66666412353516,
+    "r_precision_mean_percent": 76.66666666666667,
+    "r_precision_std_percent": 0.8311972623203767
+  },
+  "official_reference": {
+    "source": "https://github.com/MinfengZhu/DM-GAN#performance",
+    "fid_pytorch": 15.34,
+    "r_precision_mean_percent": 76.58,
+    "r_precision_std_percent": 0.53,
+    "is_bird_mean": 4.71,
+    "is_bird_std": 0.06
+  },
+  "decision": {
+    "verdict": "pass",
+    "summary": "Comparable FID and DAMSM R-precision meet the predeclared bounds for a reasonable baseline reproduction.",
+    "fid_threshold": 22.0,
+    "r_precision_threshold_percent": 70.0,
+    "fid_pass": true,
+    "r_precision_pass": true
+  },
+  "elapsed_seconds": 141.4446866609942,
+  "warning": "The local 200-step checkpoint is not evaluated as a converged quality result."
+}

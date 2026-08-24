@@ -9,6 +9,7 @@ ASSETS = {
     "bird_metadata": "1O_LtUP9sch09QH3s_EBAgLEctBQ5JBSJ",
     "bird_damsm": "1GNUKjVeyWYBJ8hEU-yrfYQpDOkxEyP3V",
     "bird_dmgan": "1BmDKqIyNY_7XWhXpxa2gm6TYxB2DQHS3",
+    "bird_fid_stats": "1747il5vnY2zNkmQ1x_8hySx537ZAJEtj",
 }
 
 

@@ -6,3 +6,4 @@ Pillow>=10,<13
 PyYAML>=6,<7
 pytest>=8,<10
 gdown>=5,<6
+scipy>=1.13,<2
