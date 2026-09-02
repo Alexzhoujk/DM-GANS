@@ -1,0 +1,217 @@
+{
+  "status": "complete",
+  "question": "Is part-aware DM-GAN better than the equal-budget baseline control?",
+  "protocol": {
+    "seeds": [
+      20260824,
+      20260825,
+      20260826
+    ],
+    "warmup_steps": 200,
+    "training_steps": 1200,
+    "part_lambda": 0.05,
+    "part_sigma_fraction": 0.08,
+    "evaluation_samples": 30000,
+    "evaluation_seed": 20260902,
+    "weights": "ema",
+    "caption_bank_size": 29330,
+    "repeated_caption_samples": 670,
+    "colour_swap_eligible_caption_count": 24454
+  },
+  "checkpoints": {
+    "text_encoder": {
+      "path": "checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "image_encoder": {
+      "path": "checkpoints/DAMSMencoders/bird/image_encoder200.pth",
+      "sha256": "459e25c9f9842c5754002cba15addaf66c7c618aa5bb87dea968b0ac3e3b2d5b"
+    },
+    "fid_stats": {
+      "path": "checkpoints/eval/bird_val.npz",
+      "sha256": "6ef8414fe0ad80ee87ff52e9d1142869b5a9952c34c4a5d518a060a7fa3a4c47"
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 20260824,
+      "baseline": {
+        "fid_pytorch": 15.94812922093243,
+        "r_precision_percent": 78.05332946777344,
+        "part_colour_swap_accuracy_percent": 71.94671630859375,
+        "part_colour_eligible_samples": 24924,
+        "part_alignment_ce": 11.253311157226562,
+        "part_attention_support_mass_percent": 11.153767585754395,
+        "part_alignment_samples": 28555,
+        "mean_active_part_tokens": 3.94344247942567
+      },
+      "part_aware": {
+        "fid_pytorch": 15.961981610033007,
+        "r_precision_percent": 77.98332977294922,
+        "part_colour_swap_accuracy_percent": 71.99085235595703,
+        "part_colour_eligible_samples": 24924,
+        "part_alignment_ce": 11.249601364135742,
+        "part_attention_support_mass_percent": 11.156850814819336,
+        "part_alignment_samples": 28555,
+        "mean_active_part_tokens": 3.94344247942567
+      },
+      "delta": {
+        "fid": 0.013852389100577511,
+        "r_precision_pp": -0.06999969482421875,
+        "part_colour_pp": 0.04413604736328125,
+        "part_ce": -0.0037097930908203125,
+        "part_support_pp": 0.0030832290649414062
+      },
+      "mcnemar_r": {
+        "baseline_only": 347,
+        "part_aware_only": 326,
+        "discordant": 673,
+        "p_value_two_sided": 0.44076358874423355
+      },
+      "mcnemar_part_colour": {
+        "baseline_only": 218,
+        "part_aware_only": 229,
+        "discordant": 447,
+        "p_value_two_sided": 0.6362738006150596
+      }
+    },
+    {
+      "seed": 20260825,
+      "baseline": {
+        "fid_pytorch": 16.29623554888036,
+        "r_precision_percent": 78.40333557128906,
+        "part_colour_swap_accuracy_percent": 72.52046203613281,
+        "part_colour_eligible_samples": 24924,
+        "part_alignment_ce": 11.253581047058105,
+        "part_attention_support_mass_percent": 11.123286247253418,
+        "part_alignment_samples": 28555,
+        "mean_active_part_tokens": 3.94344247942567
+      },
+      "part_aware": {
+        "fid_pytorch": 16.33479397861032,
+        "r_precision_percent": 78.32666778564453,
+        "part_colour_swap_accuracy_percent": 72.50040435791016,
+        "part_colour_eligible_samples": 24924,
+        "part_alignment_ce": 11.245185852050781,
+        "part_attention_support_mass_percent": 11.122380256652832,
+        "part_alignment_samples": 28555,
+        "mean_active_part_tokens": 3.94344247942567
+      },
+      "delta": {
+        "fid": 0.03855842972996015,
+        "r_precision_pp": -0.07666778564453125,
+        "part_colour_pp": -0.02005767822265625,
+        "part_ce": -0.008395195007324219,
+        "part_support_pp": -0.0009059906005859375
+      },
+      "mcnemar_r": {
+        "baseline_only": 383,
+        "part_aware_only": 360,
+        "discordant": 743,
+        "p_value_two_sided": 0.4196261587838822
+      },
+      "mcnemar_part_colour": {
+        "baseline_only": 265,
+        "part_aware_only": 260,
+        "discordant": 525,
+        "p_value_two_sided": 0.8614353054493437
+      }
+    },
+    {
+      "seed": 20260826,
+      "baseline": {
+        "fid_pytorch": 15.918747711375545,
+        "r_precision_percent": 77.7933349609375,
+        "part_colour_swap_accuracy_percent": 72.98587799072266,
+        "part_colour_eligible_samples": 24924,
+        "part_alignment_ce": 11.259207725524902,
+        "part_attention_support_mass_percent": 11.140562057495117,
+        "part_alignment_samples": 28555,
+        "mean_active_part_tokens": 3.94344247942567
+      },
+      "part_aware": {
+        "fid_pytorch": 15.973832548311265,
+        "r_precision_percent": 78.086669921875,
+        "part_colour_swap_accuracy_percent": 72.80532836914062,
+        "part_colour_eligible_samples": 24924,
+        "part_alignment_ce": 11.254916191101074,
+        "part_attention_support_mass_percent": 11.141016960144043,
+        "part_alignment_samples": 28555,
+        "mean_active_part_tokens": 3.94344247942567
+      },
+      "delta": {
+        "fid": 0.05508483693571975,
+        "r_precision_pp": 0.2933349609375,
+        "part_colour_pp": -0.18054962158203125,
+        "part_ce": -0.004291534423828125,
+        "part_support_pp": 0.00045490264892578125
+      },
+      "mcnemar_r": {
+        "baseline_only": 323,
+        "part_aware_only": 411,
+        "discordant": 734,
+        "p_value_two_sided": 0.0013060788372299423
+      },
+      "mcnemar_part_colour": {
+        "baseline_only": 288,
+        "part_aware_only": 243,
+        "discordant": 531,
+        "p_value_two_sided": 0.056103393152548184
+      }
+    }
+  ],
+  "aggregate": {
+    "fid_delta_mean": 0.03583188525541914,
+    "fid_delta_sd": 0.02075100532981882,
+    "r_precision_delta_pp": 0.04888888821005821,
+    "r_precision_delta_ci95_pp": [
+      -0.0494658499956131,
+      0.15514546632766724
+    ],
+    "part_colour_delta_pp": -0.05215856060385704,
+    "part_colour_delta_ci95_pp": [
+      -0.14878292381763458,
+      0.053745221346616745
+    ],
+    "part_ce_delta": -0.005465558264404535,
+    "part_ce_delta_ci95": [
+      -0.005566759034991264,
+      -0.005444830749183893
+    ],
+    "part_support_delta_pp": 0.0008772853179834783,
+    "part_support_delta_ci95_pp": [
+      0.0007684945594519377,
+      0.001142075634561479
+    ],
+    "mcnemar_r": {
+      "baseline_only": 1053,
+      "part_aware_only": 1097,
+      "discordant": 2150,
+      "p_value_two_sided": 0.3537413152613783
+    },
+    "mcnemar_part_colour": {
+      "baseline_only": 771,
+      "part_aware_only": 732,
+      "discordant": 1503,
+      "p_value_two_sided": 0.3270002789525461
+    },
+    "positive_part_colour_seeds": 1
+  },
+  "decision": {
+    "verdict": "not demonstrated",
+    "summary": "The auxiliary loss improves its attention proxy, but the output-level part-colour evidence is insufficient to claim that the method is better.",
+    "criteria": {
+      "part_colour_ci_lower_above_zero": false,
+      "mean_fid_regression_at_most_1": true,
+      "r_precision_regression_at_most_1pp": true,
+      "two_thirds_seeds_positive": false
+    }
+  },
+  "limitations": [
+    "Official-weight fine-tuning rather than full from-scratch convergence.",
+    "CUB part annotations are extra supervision unavailable to the control.",
+    "Real-image landmarks are a proxy because generated pose can differ.",
+    "Colour-swap accuracy uses the same frozen DAMSM family as training/evaluation.",
+    "A blinded human part-attribute study remains future validation."
+  ]
+}

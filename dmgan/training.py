@@ -12,6 +12,7 @@ from .config import DMGANConfig
 from .data import build_word_mask
 from .losses import discriminator_loss, generator_loss
 from .models import DMGenerator, MultiscaleDiscriminator
+from .part_aware import gaussian_part_heatmaps, part_aware_alignment_loss
 
 
 class ExponentialMovingAverage:
@@ -49,8 +50,13 @@ class DMGANTrainer:
             if encoder is not None:
                 for parameter in encoder.parameters():
                     parameter.requires_grad_(False)
+        trainable_generator_parameters = [
+            parameter for parameter in self.generator.parameters() if parameter.requires_grad
+        ]
+        if not trainable_generator_parameters:
+            raise ValueError("Generator must have at least one trainable parameter")
         self.generator_optimizer = torch.optim.Adam(
-            self.generator.parameters(),
+            trainable_generator_parameters,
             lr=config.generator_lr,
             betas=(config.beta1, config.beta2),
         )
@@ -65,13 +71,30 @@ class DMGANTrainer:
         self.ema = ExponentialMovingAverage(self.generator)
         self.step = 0
 
+    def _keep_frozen_generator_modules_in_eval(self) -> None:
+        for module in self.generator.modules():
+            parameters = list(module.parameters(recurse=True))
+            if parameters and not any(parameter.requires_grad for parameter in parameters):
+                module.eval()
+
     def _set_discriminator_grad(self, enabled: bool) -> None:
         for discriminator in self.discriminators:
             for parameter in discriminator.parameters():
                 parameter.requires_grad_(enabled)
 
-    def train_step(self, batch: dict[str, object]) -> tuple[dict[str, float], list[torch.Tensor]]:
+    def train_step(
+        self,
+        batch: dict[str, object],
+        *,
+        part_lambda: float = 0.0,
+        part_sigma_fraction: float = 0.08,
+    ) -> tuple[dict[str, float], list[torch.Tensor]]:
+        if part_lambda < 0:
+            raise ValueError("part_lambda must be non-negative")
+        if part_sigma_fraction <= 0:
+            raise ValueError("part_sigma_fraction must be positive")
         self.generator.train()
+        self._keep_frozen_generator_modules_in_eval()
         real_images = [image.to(self.device, non_blocking=True) for image in batch["images"]]
         captions = batch["captions"].to(self.device, non_blocking=True)
         caption_lengths = batch["caption_lengths"].to(self.device, non_blocking=True)
@@ -83,7 +106,7 @@ class DMGANTrainer:
             word_embeddings, sentence_embeddings = self.text_encoder(captions, caption_lengths)
         word_mask = build_word_mask(caption_lengths, captions.size(1))
         noise = torch.randn(captions.size(0), self.config.noise_dim, device=self.device)
-        fake_images, _, mu, logvar = self.generator(
+        fake_images, diagnostics, mu, logvar = self.generator(
             noise, sentence_embeddings, word_embeddings, word_mask
         )
 
@@ -118,6 +141,32 @@ class DMGANTrainer:
             gamma2=self.config.gamma2,
             gamma3=self.config.gamma3,
         )
+        if part_lambda > 0:
+            required_fields = ("part_coordinates", "part_visible", "token_part_targets")
+            missing = [field for field in required_fields if field not in batch]
+            if missing:
+                raise ValueError(f"Part-aware training requires batch fields: {', '.join(missing)}")
+            coordinates = batch["part_coordinates"].to(self.device, non_blocking=True)
+            visible = batch["part_visible"].to(self.device, non_blocking=True)
+            token_targets = batch["token_part_targets"].to(self.device, non_blocking=True)
+            scale_losses: list[torch.Tensor] = []
+            for scale in (128, 256):
+                attention = diagnostics[f"attention_{scale}"]
+                sigma = max(1.0, attention.shape[-1] * part_sigma_fraction)
+                heatmaps = gaussian_part_heatmaps(
+                    coordinates,
+                    visible,
+                    attention.shape[-2],
+                    attention.shape[-1],
+                    sigma=sigma,
+                )
+                scale_loss = part_aware_alignment_loss(attention, heatmaps, token_targets, word_mask)
+                scale_losses.append(scale_loss)
+                parts[f"part_alignment_{scale}"] = scale_loss.detach()
+            part_loss = torch.stack(scale_losses).mean()
+            loss = loss + part_lambda * part_loss
+            parts["part_alignment"] = part_loss.detach()
+            parts["part_weighted"] = (part_lambda * part_loss).detach()
         loss.backward()
         self.generator_optimizer.step()
         self._set_discriminator_grad(True)
@@ -137,7 +186,9 @@ class DMGANTrainer:
                 "generator": self.generator.state_dict(),
                 "discriminators": self.discriminators.state_dict(),
                 "generator_optimizer": self.generator_optimizer.state_dict(),
-                "discriminator_optimizers": [optimizer.state_dict() for optimizer in self.discriminator_optimizers],
+                "discriminator_optimizers": [
+                    optimizer.state_dict() for optimizer in self.discriminator_optimizers
+                ],
                 "ema": self.ema.state_dict(),
             },
             destination,

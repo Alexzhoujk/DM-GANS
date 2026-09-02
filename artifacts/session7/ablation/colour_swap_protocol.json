@@ -1,0 +1,166 @@
+{
+  "eligible_caption_count": 24454,
+  "candidate_count": 10,
+  "colours": [
+    "black",
+    "blue",
+    "brown",
+    "buff",
+    "cream",
+    "gray",
+    "green",
+    "grey",
+    "iridescent",
+    "olive",
+    "orange",
+    "pink",
+    "purple",
+    "red",
+    "rufous",
+    "tan",
+    "white",
+    "yellow"
+  ],
+  "examples": [
+    {
+      "caption_index": 0,
+      "colour": "white",
+      "part": "head",
+      "colour_position": 6,
+      "part_position": 7
+    },
+    {
+      "caption_index": 2,
+      "colour": "blue",
+      "part": "beak",
+      "colour_position": 10,
+      "part_position": 11
+    },
+    {
+      "caption_index": 4,
+      "colour": "brown",
+      "part": "eye",
+      "colour_position": 11,
+      "part_position": 12
+    },
+    {
+      "caption_index": 9,
+      "colour": "orange",
+      "part": "bill",
+      "colour_position": 8,
+      "part_position": 9
+    },
+    {
+      "caption_index": 10,
+      "colour": "brown",
+      "part": "wings",
+      "colour_position": 2,
+      "part_position": 1
+    },
+    {
+      "caption_index": 11,
+      "colour": "black",
+      "part": "beak",
+      "colour_position": 3,
+      "part_position": 5
+    },
+    {
+      "caption_index": 12,
+      "colour": "black",
+      "part": "eye",
+      "colour_position": 5,
+      "part_position": 6
+    },
+    {
+      "caption_index": 14,
+      "colour": "black",
+      "part": "bill",
+      "colour_position": 5,
+      "part_position": 6
+    },
+    {
+      "caption_index": 15,
+      "colour": "black",
+      "part": "bill",
+      "colour_position": 5,
+      "part_position": 6
+    },
+    {
+      "caption_index": 16,
+      "colour": "black",
+      "part": "bill",
+      "colour_position": 11,
+      "part_position": 12
+    },
+    {
+      "caption_index": 17,
+      "colour": "black",
+      "part": "bill",
+      "colour_position": 5,
+      "part_position": 6
+    },
+    {
+      "caption_index": 18,
+      "colour": "grey",
+      "part": "wing",
+      "colour_position": 9,
+      "part_position": 5
+    },
+    {
+      "caption_index": 19,
+      "colour": "brown",
+      "part": "crown",
+      "colour_position": 4,
+      "part_position": 5
+    },
+    {
+      "caption_index": 21,
+      "colour": "grey",
+      "part": "wings",
+      "colour_position": 1,
+      "part_position": 2
+    },
+    {
+      "caption_index": 24,
+      "colour": "brown",
+      "part": "feet",
+      "colour_position": 4,
+      "part_position": 8
+    },
+    {
+      "caption_index": 25,
+      "colour": "brown",
+      "part": "bill",
+      "colour_position": 8,
+      "part_position": 9
+    },
+    {
+      "caption_index": 26,
+      "colour": "white",
+      "part": "beak",
+      "colour_position": 13,
+      "part_position": 12
+    },
+    {
+      "caption_index": 27,
+      "colour": "brown",
+      "part": "wings",
+      "colour_position": 6,
+      "part_position": 3
+    },
+    {
+      "caption_index": 29,
+      "colour": "grey",
+      "part": "beak",
+      "colour_position": 5,
+      "part_position": 9
+    },
+    {
+      "caption_index": 30,
+      "colour": "grey",
+      "part": "wingbars",
+      "colour_position": 8,
+      "part_position": 5
+    }
+  ]
+}

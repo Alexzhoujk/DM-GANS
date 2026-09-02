@@ -1,7 +1,8 @@
-# DM-GAN Session 6 Baseline
+# DM-GAN Baseline and Part-Aware Ablation
 
-This repository is the runnable Session 6 baseline for **DM-GAN: Dynamic Memory
-Generative Adversarial Networks for Text-to-Image Synthesis** on CUB-200-2011.
+This repository contains the runnable Session 6 baseline and the Session 7
+part-aware ablation for **DM-GAN: Dynamic Memory Generative Adversarial Networks
+for Text-to-Image Synthesis** on CUB-200-2011.
 It separates three kinds of evidence:
 
 1. official pretrained-model inference;
@@ -9,6 +10,26 @@ It separates three kinds of evidence:
 3. samples or metrics produced by checkpoints trained with this project.
 
 These results must not be presented as interchangeable.
+
+## Session 7 final deliverables
+
+- [Completion and reproducibility report](SESSION7_COMPLETION.md) — implemented
+  method, controlled experiment, exact results, limitations, and commands.
+- [Machine-readable Session 7 results](artifacts/session7/ablation/report.json)
+  and selected per-seed arrays/previews are committed; large checkpoints are not.
+- [Final oral presentation](outputs/Final%20PPT-G_.pptx) — 15-slide deck with
+  speaker notes for a 15-minute presentation.
+- [Final written report](outputs/Final%20report-G_.docx) — five body pages plus
+  figures, tables, and references.
+- [Contribution form draft](outputs/Contribution%20Form-G_.docx) — requires the
+  real group number, group leader, member roles, and contribution percentages
+  before submission.
+
+The controlled three-seed comparison did **not demonstrate that the tested
+part-aware method is better**. The directly optimized attention proxy improved,
+but part-colour accuracy did not improve reliably; FID changed from 16.0544 to
+16.0902 and R-precision was essentially unchanged. See the Session 7 completion
+report for the paired confidence intervals and the boundary of this conclusion.
 
 ## Session 6 deliverables
 
@@ -34,8 +55,8 @@ These results must not be presented as interchangeable.
 - Author-released weights pass a fixed 30,000-sample comparable FID and
   R-precision evaluation through the modern code path.
 
-Full from-scratch convergence and the part-aware baseline/variant ablation are
-later-stage targets.
+Full from-scratch convergence remains outside the completed project scope. The
+part-aware baseline/variant ablation is complete and documented above.
 
 ## Baseline reproduction verdict
 
@@ -171,11 +192,12 @@ For every selected failure caption, save:
 - error label: part/color, object count, pose, or spatial relation;
 - whether refinement corrected or preserved the initial error.
 
-The proposed improvement is **part-aware memory alignment** using CUB part
-annotations. An optional loss prototype and unit test are included, but it
-remains an unvalidated experimental variant until a controlled baseline/variant
-comparison is run. Its efficacy is explicitly scheduled as the next experiment,
-not claimed by the baseline report.
+The tested improvement is **part-aware memory alignment** using CUB part
+annotations. The implementation now synchronizes landmarks with image
+augmentation, builds token-to-part targets, adds an optional alignment loss, and
+supports paired training and evaluation. In the completed controlled comparison,
+the mechanism proxy moved in the intended direction but output-level superiority
+was not demonstrated.
 
 ## Primary sources
 
