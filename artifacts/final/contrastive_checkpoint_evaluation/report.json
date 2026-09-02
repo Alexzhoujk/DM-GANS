@@ -1,0 +1,118 @@
+{
+  "status": "complete",
+  "sample_count": 30000,
+  "seed": 20260902,
+  "device": "cuda",
+  "torch": "2.12.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "protocol": {
+    "split": "official CUB test metadata",
+    "resolution": 256,
+    "pairing": "same caption index, latent z, CA epsilon, negatives, and evaluators",
+    "caption_seed": 20260902,
+    "negative_caption_seed": 20260903,
+    "inception_split_seed": 20260904,
+    "r_precision_split_seed": 20260905,
+    "latent_noise_seed": 20260906,
+    "conditioning_augmentation_seed": 20260907,
+    "paired_bootstrap_seed": 20260908,
+    "r_precision": "independent original DAMSM; correct caption vs 99 other-class captions",
+    "fid": "shared repository PyTorch Inception path and shared author bird_val.npz",
+    "is": "shared torchvision ImageNet Inception-v3; not paper-comparable"
+  },
+  "checkpoints": {
+    "baseline_generator": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/bird_DMGAN.pth",
+      "sha256": "444c9e43da1314fec6f6823eb995547312a9f7ecd2d50bf39d383fe0593bab55"
+    },
+    "baseline_conditioning_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "contrastive_generator": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/contrastive/bird/netG_epoch_700.pth",
+      "sha256": "8691d5e5061e0bc298b9cb8fd92431be67d6f3de6ac977b5d7842b6e7cfe4feb"
+    },
+    "contrastive_conditioning_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/contrastive/bird/text_encoder200.pth",
+      "sha256": "2f2bc7d83754d499d3325d966806beb20f2a224acfbfbd836489f308a10dd2f6"
+    },
+    "evaluation_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "evaluation_image_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/image_encoder200.pth",
+      "sha256": "459e25c9f9842c5754002cba15addaf66c7c618aa5bb87dea968b0ac3e3b2d5b"
+    },
+    "fid_real_statistics": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/eval/bird_val.npz",
+      "sha256": "6ef8414fe0ad80ee87ff52e9d1142869b5a9952c34c4a5d518a060a7fa3a4c47"
+    }
+  },
+  "results": {
+    "baseline": {
+      "fid_pytorch": 15.704748628940564,
+      "r_precision": {
+        "overall_percent": 76.84333333333333,
+        "split_mean_percent": 76.84333333333333,
+        "split_std_percent": 0.6918654332872661
+      },
+      "is_imagenet_mean": 5.660589503515583,
+      "is_imagenet_std": 0.10995034796895495
+    },
+    "contrastive": {
+      "fid_pytorch": 14.643668040995237,
+      "r_precision": {
+        "overall_percent": 71.29333333333334,
+        "split_mean_percent": 71.29333333333334,
+        "split_std_percent": 0.9290138140343598
+      },
+      "is_imagenet_mean": 5.534458520797349,
+      "is_imagenet_std": 0.06610050153330621
+    },
+    "delta_contrastive_minus_baseline": {
+      "fid_pytorch": -1.0610805879453267,
+      "r_precision_percentage_points": -5.549999999999997,
+      "is_imagenet_mean": -0.12613098271823375
+    }
+  },
+  "paired_r_precision": {
+    "both_correct": 17831,
+    "baseline_only_correct": 5222,
+    "contrastive_only_correct": 3557,
+    "both_wrong": 3390,
+    "discordant_pairs": 8779,
+    "mcnemar_exact_two_sided_p": 5.582508412534852e-71,
+    "mcnemar_note": "Descriptive only: caption rows from the same CUB image and repeated rows are correlated.",
+    "bootstrap_unit": "official CUB test image",
+    "bootstrap_cluster_count": 2933,
+    "bootstrap_resamples": 10000,
+    "cluster_bootstrap_delta_percentage_points_95_ci": [
+      -6.164358594746315,
+      -4.933240976820823
+    ]
+  },
+  "decision": {
+    "verdict": "mixed",
+    "summary": "DM-GAN+CL lowers the FID point estimate, but the image-cluster confidence interval does not establish R-precision non-inferiority within 1 percentage point.",
+    "strict_rule": "30k samples; CL FID < baseline FID and the 95% CUB-image cluster-bootstrap lower bound for CL-minus-baseline R-precision is > -1 percentage point",
+    "r_precision_noninferiority_margin_percentage_points": -1.0,
+    "r_precision_cluster_ci_lower_percentage_points": -6.164358594746315
+  },
+  "artifacts": {
+    "paired_preview": "/home/zjk/Desktop/DM-GANS/artifacts/final/contrastive_checkpoint_evaluation/paired_preview_256.png",
+    "paired_preview_manifest": "/home/zjk/Desktop/DM-GANS/artifacts/final/contrastive_checkpoint_evaluation/paired_preview_manifest.json",
+    "paired_samples": "/home/zjk/Desktop/DM-GANS/artifacts/final/contrastive_checkpoint_evaluation/paired_samples.npz"
+  },
+  "elapsed_seconds": 281.66352305701,
+  "limitations": [
+    "A single checkpoint pair and one random seed do not measure training-run variance.",
+    "FID is a distribution-level statistic; the paired design controls inputs but does not make FID a paired per-image test.",
+    "R-precision depends on the chosen frozen original DAMSM evaluator and its 99 sampled negatives.",
+    "The sample-level McNemar p-value is descriptive because captions from one image and repeated rows are correlated; the image-cluster bootstrap is the uncertainty result to use.",
+    "ImageNet IS is an internal health check and is not comparable with the paper's legacy CUB bird-classifier IS.",
+    "Caption indices repeat after the finite official test-caption bank is exhausted.",
+    "Checkpoint evaluation tests released models; it does not by itself verify that this repository can reproduce their training."
+  ]
+}

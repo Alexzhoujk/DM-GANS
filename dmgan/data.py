@@ -25,6 +25,8 @@ class CaptionSample:
     part_coordinates: torch.Tensor | None = None
     part_visible: torch.Tensor | None = None
     token_part_targets: torch.Tensor | None = None
+    paired_caption: torch.Tensor | None = None
+    paired_caption_length: int | None = None
 
 
 def build_word_mask(caption_lengths: torch.Tensor, word_count: int) -> torch.Tensor:
@@ -53,6 +55,7 @@ class CUBCaptionDataset(Dataset[CaptionSample]):
         branch_sizes: tuple[int, ...] = (64, 128, 256),
         training: bool = True,
         include_parts: bool = False,
+        paired_captions: bool = False,
     ) -> None:
         super().__init__()
         from torchvision import transforms
@@ -65,12 +68,15 @@ class CUBCaptionDataset(Dataset[CaptionSample]):
         self.branch_sizes = branch_sizes
         self.training = training
         self.include_parts = include_parts
+        self.paired_captions = paired_captions
         with (self.root / split / "filenames.pickle").open("rb") as stream:
             self.keys = pickle.load(stream, encoding="latin1")
         with (self.root / "captions.pickle").open("rb") as stream:
             train_caps, test_caps, self.ixtoword, self.wordtoix = pickle.load(stream, encoding="latin1")
         self.captions = train_caps if split == "train" else test_caps
         self.captions_per_image = len(self.captions) // len(self.keys)
+        if self.paired_captions and self.captions_per_image < 2:
+            raise ValueError("paired_captions=True requires at least two captions per image")
         class_path = self.root / split / "class_info.pickle"
         if not class_path.exists():
             class_path = self.root / "class_info.pickle"
@@ -243,18 +249,31 @@ class CUBCaptionDataset(Dataset[CaptionSample]):
             ).squeeze(0)
             for size in self.branch_sizes
         ]
-        caption_index = index * self.captions_per_image + random.randrange(self.captions_per_image)
+        if self.paired_captions:
+            first_offset, second_offset = random.sample(range(self.captions_per_image), 2)
+        else:
+            first_offset = random.randrange(self.captions_per_image)
+            second_offset = None
+        caption_index = index * self.captions_per_image + first_offset
         caption, caption_length = self._caption(caption_index)
+        if second_offset is not None:
+            paired_caption_index = index * self.captions_per_image + second_offset
+            paired_caption, paired_caption_length = self._caption(paired_caption_index)
+        else:
+            paired_caption = None
+            paired_caption_length = None
         targets = token_part_targets(caption, self.ixtoword) if self.include_parts else None
         return CaptionSample(
-            images,
-            caption,
-            caption_length,
-            int(self.class_ids[index]),
-            key,
-            part_coordinates,
-            part_visible,
-            targets,
+            images=images,
+            caption=caption,
+            caption_length=caption_length,
+            class_id=int(self.class_ids[index]),
+            key=key,
+            part_coordinates=part_coordinates,
+            part_visible=part_visible,
+            token_part_targets=targets,
+            paired_caption=paired_caption,
+            paired_caption_length=paired_caption_length,
         )
 
 
@@ -272,6 +291,13 @@ def collate_caption_samples(samples: list[CaptionSample]) -> dict[str, object]:
         "class_ids": class_ids,
         "keys": keys,
     }
+    paired_captions = [samples[index].paired_caption for index in order]
+    paired_lengths = [samples[index].paired_caption_length for index in order]
+    if all(caption is not None for caption in paired_captions) and all(
+        length is not None for length in paired_lengths
+    ):
+        batch["paired_captions"] = torch.stack(paired_captions)  # type: ignore[arg-type]
+        batch["paired_caption_lengths"] = torch.tensor(paired_lengths, dtype=torch.long)
     optional_fields = ("part_coordinates", "part_visible", "token_part_targets")
     for field in optional_fields:
         values = [getattr(samples[index], field) for index in order]

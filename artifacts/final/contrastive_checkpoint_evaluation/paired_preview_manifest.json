@@ -1,0 +1,146 @@
+[
+  {
+    "row": 0,
+    "sample_index": 0,
+    "caption_index": 0,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 0,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 1,
+    "sample_index": 1,
+    "caption_index": 1,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 1,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 2,
+    "sample_index": 2,
+    "caption_index": 2,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 2,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 3,
+    "sample_index": 3,
+    "caption_index": 3,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 3,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 4,
+    "sample_index": 4,
+    "caption_index": 4,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 4,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 5,
+    "sample_index": 5,
+    "caption_index": 5,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 5,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 6,
+    "sample_index": 6,
+    "caption_index": 6,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 6,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 7,
+    "sample_index": 7,
+    "caption_index": 7,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 7,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 8,
+    "sample_index": 8,
+    "caption_index": 8,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 8,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 9,
+    "sample_index": 9,
+    "caption_index": 9,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0046_18",
+    "caption_slot": 9,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 10,
+    "sample_index": 10,
+    "caption_index": 10,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0009_34",
+    "caption_slot": 0,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 11,
+    "sample_index": 11,
+    "caption_index": 11,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0009_34",
+    "caption_slot": 1,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 12,
+    "sample_index": 12,
+    "caption_index": 12,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0009_34",
+    "caption_slot": 2,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 13,
+    "sample_index": 13,
+    "caption_index": 13,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0009_34",
+    "caption_slot": 3,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 14,
+    "sample_index": 14,
+    "caption_index": 14,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0009_34",
+    "caption_slot": 4,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  },
+  {
+    "row": 15,
+    "sample_index": 15,
+    "caption_index": 15,
+    "image_key": "001.Black_footed_Albatross/Black_Footed_Albatross_0009_34",
+    "caption_slot": 5,
+    "left": "DM-GAN baseline",
+    "right": "DM-GAN+CL"
+  }
+]

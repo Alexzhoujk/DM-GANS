@@ -1,0 +1,114 @@
+{
+  "status": "complete",
+  "baseline_name": "Dual-caption control",
+  "candidate_name": "DM-GAN + CL2",
+  "run_count": 3,
+  "seeds": [
+    20260902,
+    20260903,
+    20260904
+  ],
+  "runs": [
+    {
+      "seed": 20260902,
+      "sample_count": 30000,
+      "baseline_generator_format": "modern-ema",
+      "candidate_generator_format": "modern-ema",
+      "baseline_fid": 16.10097380687023,
+      "candidate_fid": 16.154089444109957,
+      "fid_delta": 0.053115637239727675,
+      "baseline_r_percent": 78.40333333333334,
+      "candidate_r_percent": 78.44666666666666,
+      "r_delta_percentage_points": 0.043333333333322344,
+      "individual_verdict": "not supported",
+      "supported": false,
+      "source_report": "/home/zjk/Desktop/DM-GANS/artifacts/final/contrastive_finetune_evaluation/seed_20260902/report.json"
+    },
+    {
+      "seed": 20260903,
+      "sample_count": 30000,
+      "baseline_generator_format": "modern-ema",
+      "candidate_generator_format": "modern-ema",
+      "baseline_fid": 15.867359093009895,
+      "candidate_fid": 15.776977805858138,
+      "fid_delta": -0.0903812871517573,
+      "baseline_r_percent": 77.57333333333334,
+      "candidate_r_percent": 77.54666666666667,
+      "r_delta_percentage_points": -0.026666666666670835,
+      "individual_verdict": "supported",
+      "supported": true,
+      "source_report": "/home/zjk/Desktop/DM-GANS/artifacts/final/contrastive_finetune_evaluation/seed_20260903/report.json"
+    },
+    {
+      "seed": 20260904,
+      "sample_count": 30000,
+      "baseline_generator_format": "modern-ema",
+      "candidate_generator_format": "modern-ema",
+      "baseline_fid": 15.887565860544441,
+      "candidate_fid": 15.809781719894403,
+      "fid_delta": -0.07778414065003858,
+      "baseline_r_percent": 78.00333333333333,
+      "candidate_r_percent": 78.16,
+      "r_delta_percentage_points": 0.1566666666666663,
+      "individual_verdict": "supported",
+      "supported": true,
+      "source_report": "/home/zjk/Desktop/DM-GANS/artifacts/final/contrastive_finetune_evaluation/seed_20260904/report.json"
+    }
+  ],
+  "aggregate": {
+    "baseline_fid": {
+      "count": 3,
+      "mean": 15.951966253474856,
+      "sample_std": 0.12943923898959378,
+      "minimum": 15.867359093009895,
+      "maximum": 16.10097380687023
+    },
+    "candidate_fid": {
+      "count": 3,
+      "mean": 15.9136163232875,
+      "sample_std": 0.20890073138357812,
+      "minimum": 15.776977805858138,
+      "maximum": 16.154089444109957
+    },
+    "fid_delta": {
+      "count": 3,
+      "mean": -0.03834993018735607,
+      "sample_std": 0.0794615287014115,
+      "minimum": -0.0903812871517573,
+      "maximum": 0.053115637239727675
+    },
+    "baseline_r_percent": {
+      "count": 3,
+      "mean": 77.99333333333334,
+      "sample_std": 0.41509035161034424,
+      "minimum": 77.57333333333334,
+      "maximum": 78.40333333333334
+    },
+    "candidate_r_percent": {
+      "count": 3,
+      "mean": 78.0511111111111,
+      "sample_std": 0.4597745018947754,
+      "minimum": 77.54666666666667,
+      "maximum": 78.44666666666666
+    },
+    "r_delta_percentage_points": {
+      "count": 3,
+      "mean": 0.0577777777777726,
+      "sample_std": 0.0925162648362964,
+      "minimum": -0.026666666666670835,
+      "maximum": 0.1566666666666663
+    }
+  },
+  "decision": {
+    "verdict": "mixed across seeds",
+    "summary": "Only 2 of 3 supplied seeded evaluations is supported.",
+    "rule": "Every seed must use at least 30,000 samples, lower candidate FID, and have a 95% image-cluster bootstrap lower bound above -1 percentage point for the candidate-minus-baseline R-precision delta.",
+    "supported_run_count": 2,
+    "distinct_generator_checkpoint_pairs_verified": true
+  },
+  "limitations": [
+    "The report seed controls evaluation randomness. Unless training seed metadata is separately recorded and evaluation streams are held fixed, across-run SD conflates checkpoint/training variation with caption truncation, negatives, z, and CA sampling.",
+    "With three supplied runs, across-run uncertainty remains imprecise; individual paired R-precision confidence intervals remain primary evidence.",
+    "FID deltas are distribution-level differences and do not have a per-image paired confidence interval."
+  ]
+}

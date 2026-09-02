@@ -1,0 +1,24 @@
+{
+  "status": "complete",
+  "experiment": "paired equal-budget dual-caption control versus DM-GAN+CL2 fine-tuning",
+  "seeds": [
+    20260902,
+    20260903,
+    20260904
+  ],
+  "completed": [
+    {
+      "seed": 20260902,
+      "status": "complete"
+    },
+    {
+      "seed": 20260903,
+      "status": "complete"
+    },
+    {
+      "seed": 20260904,
+      "status": "complete"
+    }
+  ],
+  "elapsed_seconds": 2002.7988852749986
+}

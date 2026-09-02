@@ -146,6 +146,7 @@ def generator_loss(
     logvar: torch.Tensor,
     *,
     image_encoder: nn.Module | None = None,
+    image_features: tuple[torch.Tensor, torch.Tensor] | None = None,
     word_embeddings: torch.Tensor | None = None,
     caption_lengths: torch.Tensor | None = None,
     class_ids: torch.Tensor | None = None,
@@ -172,11 +173,16 @@ def generator_loss(
         metrics[f"adversarial_{image.shape[-1]}"] = scale_loss.detach()
 
     if matching_lambda > 0:
-        required = (image_encoder, word_embeddings, caption_lengths)
-        if any(value is None for value in required):
+        if image_encoder is None and image_features is None:
+            raise ValueError("DAMSM matching requires image_encoder or precomputed image_features")
+        if word_embeddings is None or caption_lengths is None:
             raise ValueError("DAMSM matching requires image_encoder, word_embeddings, and caption_lengths")
         labels = torch.arange(images[-1].size(0), device=images[-1].device)
-        region_features, image_code = image_encoder(images[-1])
+        if image_features is None:
+            assert image_encoder is not None
+            region_features, image_code = image_encoder(images[-1])
+        else:
+            region_features, image_code = image_features
         word_loss_0, word_loss_1, _ = word_matching_loss(
             region_features,
             word_embeddings,

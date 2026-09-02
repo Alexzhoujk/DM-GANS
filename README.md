@@ -1,9 +1,13 @@
-# DM-GAN Baseline and Part-Aware Ablation
+# DM-GAN Baseline and Published-Successor Validation
 
-This repository contains the runnable Session 6 baseline and the Session 7
-part-aware ablation for **DM-GAN: Dynamic Memory Generative Adversarial Networks
-for Text-to-Image Synthesis** on CUB-200-2011.
-It separates three kinds of evidence:
+This repository contains a modern, runnable reproduction of **DM-GAN: Dynamic
+Memory Generative Adversarial Networks for Text-to-Image Synthesis** on
+CUB-200-2011, together with controlled evaluations of published successor
+methods. The selected final method is **DM-GAN-MDD**, a modality-disentangled
+discriminator extension of DM-GAN. The earlier Session 7 part-aware ablation is
+retained as an informative negative result rather than overwritten.
+
+The repository separates three kinds of evidence:
 
 1. official pretrained-model inference;
 2. forward/loss/backward evidence from this modern reimplementation;
@@ -11,25 +15,46 @@ It separates three kinds of evidence:
 
 These results must not be presented as interchangeable.
 
-## Session 7 final deliverables
+## Final outcome and deliverables
 
-- [Completion and reproducibility report](SESSION7_COMPLETION.md) — implemented
+Under the controlled **matched deterministic-mean conditioning** protocol,
+DM-GAN-MDD is the only evaluated published successor that satisfies the
+prespecified joint rule: lower FID and R-precision non-inferiority within one
+percentage point.
+
+| 30,000-sample paired CUB comparison | DM-GAN | DM-GAN-MDD | Candidate - baseline |
+| --- | ---: | ---: | ---: |
+| PyTorch FID ↓ | 17.1708 | **16.1543** | **-1.0164 (-5.92%)** |
+| DAMSM R-precision ↑ | 79.0967% | **79.7700%** | **+0.6733 pp** |
+
+The CUB-image-cluster bootstrap 95% interval for the R-precision difference is
+**[+0.1339, +1.2252] percentage points**. This is a matched-policy checkpoint
+advantage, not evidence that MDD is universally better or that its discriminator
+loss alone caused the difference. With each release's native conditioning policy,
+MDD improves R-precision but worsens FID.
+
+- [Final improvement report and complete reproduction commands](FINAL_IMPROVEMENT.md)
+- [Final oral presentation](outputs/Final%20PPT-G_.pptx)
+- [Final written report](outputs/Final%20report-G_.docx)
+- [Contribution form](outputs/Contribution%20Form-G_.docx)
+- [Matched-mean machine-readable result](artifacts/final/mdd_matched_mean_30k/report.json)
+- [Native-policy sensitivity result](artifacts/final/mdd_native_30k/report.json)
+
+The `G_` filename placeholder must be replaced with the real group number before
+submission.
+
+## Retained Session 7 part-aware ablation
+
+- [Original completion and reproducibility report](SESSION7_COMPLETION.md) — implemented
   method, controlled experiment, exact results, limitations, and commands.
 - [Machine-readable Session 7 results](artifacts/session7/ablation/report.json)
   and selected per-seed arrays/previews are committed; large checkpoints are not.
-- [Final oral presentation](outputs/Final%20PPT-G_.pptx) — 15-slide deck with
-  speaker notes for a 15-minute presentation.
-- [Final written report](outputs/Final%20report-G_.docx) — five body pages plus
-  figures, tables, and references.
-- [Contribution form draft](outputs/Contribution%20Form-G_.docx) — requires the
-  real group number, group leader, member roles, and contribution percentages
-  before submission.
 
-The controlled three-seed comparison did **not demonstrate that the tested
-part-aware method is better**. The directly optimized attention proxy improved,
-but part-colour accuracy did not improve reliably; FID changed from 16.0544 to
-16.0902 and R-precision was essentially unchanged. See the Session 7 completion
-report for the paired confidence intervals and the boundary of this conclusion.
+The original controlled three-seed comparison did **not demonstrate that the
+tested part-aware method is better**. The directly optimized attention proxy
+improved, but part-colour accuracy did not improve reliably; mean FID changed
+from 16.0544 to 16.0902 and R-precision was essentially unchanged. This result
+remains documented separately from the later published-successor validation.
 
 ## Session 6 deliverables
 
@@ -56,7 +81,8 @@ report for the paired confidence intervals and the boundary of this conclusion.
   R-precision evaluation through the modern code path.
 
 Full from-scratch convergence remains outside the completed project scope. The
-part-aware baseline/variant ablation is complete and documented above.
+part-aware ablation and the later released-checkpoint successor comparisons are
+complete and documented separately above.
 
 ## Baseline reproduction verdict
 
@@ -102,9 +128,12 @@ The default test uses smaller channel counts but exercises the complete model an
 optimizer path:
 
 ```bash
-.venv/bin/python -m pytest
+.venv/bin/python -m pytest -q
+.venv/bin/ruff check dmgan scripts tests
 .venv/bin/python scripts/smoke_test.py --device cuda
 ```
+
+The final suite contains 51 passing tests, and Ruff reports no errors.
 
 For paper-sized G/D channel widths:
 
@@ -201,5 +230,7 @@ was not demonstrated.
 
 ## Primary sources
 
-- Official repository: https://github.com/MinfengZhu/DM-GAN
-- CVPR 2019 paper: https://openaccess.thecvf.com/content_CVPR_2019/papers/Zhu_DM-GAN_Dynamic_Memory_Generative_Adversarial_Networks_for_Text-To-Image_Synthesis_CVPR_2019_paper.pdf
+- DM-GAN: [CVPR 2019 paper](https://openaccess.thecvf.com/content_CVPR_2019/html/Zhu_DM-GAN_Dynamic_Memory_Generative_Adversarial_Networks_for_Text-To-Image_Synthesis_CVPR_2019_paper.html) and [official code](https://github.com/MinfengZhu/DM-GAN).
+- DM-GAN-MDD: [publisher DOI](https://doi.org/10.1109/TMM.2021.3075997) and [official code](https://github.com/FangxiangFeng/DM-GAN-MDD).
+- DM-GAN+CL: [paper](https://arxiv.org/abs/2107.02423) and [official code](https://github.com/huiyegit/T2I_CL).
+- DAE-GAN: [ICCV 2021 paper](https://openaccess.thecvf.com/content/ICCV2021/html/Ruan_DAE-GAN_Dynamic_Aspect-Aware_GAN_for_Text-to-Image_Synthesis_ICCV_2021_paper.html) and [official code](https://github.com/hiarsal/DAE-GAN).

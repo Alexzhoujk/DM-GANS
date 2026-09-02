@@ -1,0 +1,118 @@
+{
+  "status": "complete",
+  "dae_name": "DAE-GAN (corrected-mask checkpoint execution)",
+  "sample_count": 30000,
+  "seed": 20260902,
+  "device": "cuda",
+  "torch": "2.12.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "protocol": {
+    "split": "official CUB test metadata",
+    "resolution": 256,
+    "caption_words": 18,
+    "pairing": "same caption index, latent z, CA epsilon, negatives, and evaluators",
+    "dae_attention_mask": "corrected batch-major broadcast (default)",
+    "latent_noise_seed": 20260906,
+    "conditioning_augmentation_seed": 20260907,
+    "negative_caption_seed": 20260903,
+    "cluster_bootstrap_seed": 20260908
+  },
+  "inputs": {
+    "baseline_generator": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/bird_DMGAN.pth",
+      "sha256": "444c9e43da1314fec6f6823eb995547312a9f7ecd2d50bf39d383fe0593bab55"
+    },
+    "dae_generator": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/dae/bird/netG_3s.pth",
+      "sha256": "324251dcc350a9ec398487fceeb66a66bc01ee81e740fe6793aedd83c2b05286"
+    },
+    "dae_metadata": {
+      "path": "/home/zjk/Desktop/DM-GANS/data/dae/bird/captions_with_aspects.pickle",
+      "sha256": "1005b0785ede13aa84b5faef645275c88896f717a9db7223b2c98ef81a8bd7c6"
+    },
+    "conditioning_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "evaluation_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "evaluation_image_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/image_encoder200.pth",
+      "sha256": "459e25c9f9842c5754002cba15addaf66c7c618aa5bb87dea968b0ac3e3b2d5b"
+    },
+    "fid_real_statistics": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/eval/bird_val.npz",
+      "sha256": "6ef8414fe0ad80ee87ff52e9d1142869b5a9952c34c4a5d518a060a7fa3a4c47"
+    }
+  },
+  "results": {
+    "baseline": {
+      "fid_pytorch": 15.66934688802013,
+      "r_precision": {
+        "overall_percent": 76.42666666666666,
+        "split_mean_percent": 76.42666666666666,
+        "split_std_percent": 0.4746460669687358
+      },
+      "is_imagenet_mean": 5.676891871328286,
+      "is_imagenet_std": 0.09929774853482476
+    },
+    "dae_gan": {
+      "fid_pytorch": 21.956427006354744,
+      "r_precision": {
+        "overall_percent": 86.12666666666667,
+        "split_mean_percent": 86.12666666666667,
+        "split_std_percent": 0.6572332581021412
+      },
+      "is_imagenet_mean": 5.420445171728075,
+      "is_imagenet_std": 0.09746378393890932
+    },
+    "delta_dae_minus_baseline": {
+      "fid_pytorch": 6.2870801183346146,
+      "r_precision_percentage_points": 9.700000000000003,
+      "is_imagenet_mean": -0.25644669960021105
+    }
+  },
+  "paired_r_precision": {
+    "both_correct": 20823,
+    "baseline_only_correct": 2105,
+    "dae_only_correct": 5015,
+    "both_wrong": 2057,
+    "discordant_pairs": 7120,
+    "mcnemar_exact_two_sided_p": 3.7335811865643377e-268,
+    "mcnemar_note": "Descriptive only: captions from one CUB image and repeated rows are correlated.",
+    "bootstrap_unit": "official CUB test image",
+    "bootstrap_cluster_count": 2933,
+    "bootstrap_resamples": 10000,
+    "cluster_bootstrap_delta_percentage_points_95_ci": [
+      9.134772177788106,
+      10.239764234432679
+    ]
+  },
+  "decision": {
+    "verdict": "not supported",
+    "summary": "DAE-GAN (corrected-mask checkpoint execution) does not lower the FID point estimate under the fixed paired protocol.",
+    "strict_rule": "30k samples; DAE FID < baseline FID and the 95% CUB-image cluster-bootstrap lower bound for DAE-minus-baseline R is > -1 pp",
+    "r_precision_cluster_ci_lower_percentage_points": 9.134772177788106
+  },
+  "artifacts": {
+    "paired_preview": "/home/zjk/Desktop/DM-GANS/artifacts/final/dae_checkpoint_evaluation_netG_3s/paired_preview_256.png",
+    "paired_preview_manifest": "/home/zjk/Desktop/DM-GANS/artifacts/final/dae_checkpoint_evaluation_netG_3s/paired_preview_manifest.json",
+    "paired_samples": "/home/zjk/Desktop/DM-GANS/artifacts/final/dae_checkpoint_evaluation_netG_3s/paired_samples.npz"
+  },
+  "elapsed_seconds": 326.9646804529766,
+  "limitations": [
+    "DAE-GAN is an independent aspect-aware multi-stage architecture, not a small DM-GAN plugin.",
+    "The corrected attention mask implements the apparent batch-major intent but differs from released batch>1 execution; use --legacy-attention-mask only as a sensitivity check.",
+    "Aspect preprocessing deterministically keeps the first three phrases and first five tokens, while the released data loader randomly subsamples phrases longer than five tokens; this removes data-loader RNG but is not bit-exact for those phrases.",
+    "Checkpoint evaluation does not reproduce 600-epoch training or training-run variance.",
+    "FID is distribution-level; pairing controls inputs but does not create a per-image FID test.",
+    "R-precision depends on the frozen original DAMSM evaluator and sampled negatives.",
+    "ImageNet IS is not comparable with the paper's legacy CUB bird-classifier IS."
+  ],
+  "sources": {
+    "paper": "https://openaccess.thecvf.com/content/ICCV2021/papers/Ruan_DAE-GAN_Dynamic_Aspect-Aware_GAN_for_Text-to-Image_Synthesis_ICCV_2021_paper.pdf",
+    "official_code": "https://github.com/hiarsal/DAE-GAN"
+  }
+}

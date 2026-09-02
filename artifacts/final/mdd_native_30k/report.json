@@ -1,0 +1,132 @@
+{
+  "status": "complete",
+  "baseline_name": "DM-GAN",
+  "candidate_name": "DM-GAN-MDD",
+  "sample_count": 30000,
+  "seed": 20260902,
+  "device": "cuda",
+  "torch": "2.12.0+cu130",
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "protocol": {
+    "split": "official CUB test metadata",
+    "resolution": 256,
+    "pairing": "same caption index, latent z, negatives, and evaluators; the sample-mode side uses the recorded deterministic CA RNG stream while the mean-mode side uses no CA epsilon",
+    "baseline_conditioning_mode": "sample",
+    "candidate_conditioning_mode": "mean",
+    "baseline_generator_format": "official",
+    "candidate_generator_format": "official",
+    "caption_seed": 20260902,
+    "negative_caption_seed": 20260903,
+    "inception_split_seed": 20260904,
+    "r_precision_split_seed": 20260905,
+    "latent_noise_seed": 20260906,
+    "conditioning_augmentation_seed": 20260907,
+    "paired_bootstrap_seed": 20260908,
+    "r_precision": "shared frozen original DAMSM scorer; correct caption vs 99 other-class captions",
+    "candidate_conditioner_is_evaluator": true,
+    "fid": "shared repository PyTorch Inception path and shared author bird_val.npz",
+    "is": "shared torchvision ImageNet Inception-v3; not paper-comparable"
+  },
+  "checkpoints": {
+    "baseline_generator": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/bird_DMGAN.pth",
+      "sha256": "444c9e43da1314fec6f6823eb995547312a9f7ecd2d50bf39d383fe0593bab55",
+      "format": "official"
+    },
+    "baseline_conditioning_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "candidate_generator": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/mdd/bird/netG_DMGANMDD_bird.pth",
+      "sha256": "e905baaffb54d2247f27146c7810aacd9bb707916d2163d90d62f3aa55bb98e1",
+      "format": "official"
+    },
+    "candidate_conditioning_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "evaluation_text_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/text_encoder200.pth",
+      "sha256": "d7278a9b4801633eb42d43de67cba51746daf5143be532660bf1c15608690c01"
+    },
+    "evaluation_image_encoder": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/DAMSMencoders/bird/image_encoder200.pth",
+      "sha256": "459e25c9f9842c5754002cba15addaf66c7c618aa5bb87dea968b0ac3e3b2d5b"
+    },
+    "fid_real_statistics": {
+      "path": "/home/zjk/Desktop/DM-GANS/checkpoints/eval/bird_val.npz",
+      "sha256": "6ef8414fe0ad80ee87ff52e9d1142869b5a9952c34c4a5d518a060a7fa3a4c47"
+    }
+  },
+  "results": {
+    "baseline": {
+      "fid_pytorch": 15.704748628940564,
+      "r_precision": {
+        "overall_percent": 76.84333333333333,
+        "split_mean_percent": 76.84333333333333,
+        "split_std_percent": 0.6918654332872661
+      },
+      "is_imagenet_mean": 5.660589503515583,
+      "is_imagenet_std": 0.10995034796895495
+    },
+    "candidate": {
+      "fid_pytorch": 16.154330063889063,
+      "r_precision": {
+        "overall_percent": 79.77,
+        "split_mean_percent": 79.77000000000001,
+        "split_std_percent": 0.8006178169944055
+      },
+      "is_imagenet_mean": 5.734656214075446,
+      "is_imagenet_std": 0.06993979729961675
+    },
+    "delta_candidate_minus_baseline": {
+      "fid_pytorch": 0.4495814349484988,
+      "r_precision_percentage_points": 2.9266666666666623,
+      "is_imagenet_mean": 0.07406671055986269
+    }
+  },
+  "paired_r_precision": {
+    "both_correct": 19651,
+    "baseline_only_correct": 3402,
+    "candidate_only_correct": 4280,
+    "both_wrong": 2667,
+    "discordant_pairs": 7682,
+    "mcnemar_exact_two_sided_p": 1.2852842059574656e-23,
+    "mcnemar_note": "Descriptive only: caption rows from the same CUB image and repeated rows are correlated.",
+    "bootstrap_unit": "official CUB test image",
+    "bootstrap_cluster_count": 2933,
+    "bootstrap_resamples": 10000,
+    "cluster_bootstrap_delta_percentage_points_95_ci": [
+      2.375369052504085,
+      3.4848117367065536
+    ]
+  },
+  "decision": {
+    "verdict": "not supported",
+    "summary": "DM-GAN-MDD does not lower the FID point estimate under this fixed paired protocol.",
+    "strict_rule": "30k samples; DM-GAN-MDD FID < DM-GAN FID and the 95% CUB-image cluster-bootstrap lower bound for DM-GAN-MDD-minus-DM-GAN R-precision is > -1 percentage point",
+    "r_precision_noninferiority_margin_percentage_points": -1.0,
+    "r_precision_cluster_ci_lower_percentage_points": 2.375369052504085
+  },
+  "artifacts": {
+    "paired_preview": "/home/zjk/Desktop/DM-GANS/artifacts/final/mdd_native_30k/paired_preview_256.png",
+    "paired_preview_manifest": "/home/zjk/Desktop/DM-GANS/artifacts/final/mdd_native_30k/paired_preview_manifest.json",
+    "paired_samples": "/home/zjk/Desktop/DM-GANS/artifacts/final/mdd_native_30k/paired_samples.npz"
+  },
+  "elapsed_seconds": 294.41907241698937,
+  "limitations": [
+    "A single checkpoint pair and one random seed do not measure training-run variance.",
+    "FID is a distribution-level statistic; the paired design controls inputs but does not make FID a paired per-image test.",
+    "R-precision depends on the chosen frozen original DAMSM evaluator and its 99 sampled negatives.",
+    "The sample-level McNemar p-value is descriptive because captions from one image and repeated rows are correlated; the image-cluster bootstrap is the uncertainty result to use.",
+    "ImageNet IS is an internal health check and is not comparable with the paper's legacy CUB bird-classifier IS.",
+    "Caption indices repeat after the finite official test-caption bank is exhausted.",
+    "Checkpoint evaluation tests saved model states; it does not independently reproduce the full training trajectory.",
+    "Both generators use the modern correctly broadcast padding mask. This is a shared and controlled implementation, but it is not bit-exact with the author repositories' batch>1 repeat-based legacy mask layout.",
+    "The candidate conditioner and R-precision text evaluator have identical original DAMSM weights. The evaluator is a separately loaded frozen module and is applied equally to both models, but it is not an encoder-family-independent judge of the candidate.",
+    "The native-mode comparison changes both checkpoint weights and the CA inference policy; use the matched-mean run for the controlled checkpoint comparison.",
+    "This native-behavior sensitivity comparison intentionally uses stochastic CA for released DM-GAN and deterministic mean CA for released MDD, so its difference includes the published inference-mode change.",
+    "The author-released MDD and DM-GAN checkpoints came from different training configurations; this checkpoint comparison validates released models, not an isolated retraining ablation of the MDD loss."
+  ]
+}

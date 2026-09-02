@@ -52,11 +52,13 @@ class ConditioningAugmentation(nn.Module):
         self.condition_dim = condition_dim
         self.projection = nn.Sequential(nn.Linear(text_dim, condition_dim * 4), GLU())
 
-    def forward(self, sentence: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def forward(
+        self, sentence: torch.Tensor, *, sample: bool = True
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         statistics = self.projection(sentence)
         mu = statistics[:, : self.condition_dim]
         logvar = statistics[:, self.condition_dim :]
-        condition = mu + torch.randn_like(mu) * torch.exp(0.5 * logvar)
+        condition = mu + torch.randn_like(mu) * torch.exp(0.5 * logvar) if sample else mu
         return condition, mu, logvar
 
 
@@ -213,8 +215,9 @@ class DMGenerator(nn.Module):
         sentence_features: torch.Tensor,
         word_features: torch.Tensor,
         word_mask: torch.Tensor | None = None,
+        sample_conditioning: bool = True,
     ) -> tuple[list[torch.Tensor], dict[str, torch.Tensor], torch.Tensor, torch.Tensor]:
-        condition, mu, logvar = self.ca(sentence_features)
+        condition, mu, logvar = self.ca(sentence_features, sample=sample_conditioning)
         hidden_64 = self.initial(noise, condition)
         hidden_128, diagnostics_128 = self.refine_128(hidden_64, word_features, word_mask)
         hidden_256, diagnostics_256 = self.refine_256(hidden_128, word_features, word_mask)
@@ -241,9 +244,7 @@ def _sn_conv(
     stride: int = 1,
     padding: int = 0,
 ) -> nn.Conv2d:
-    return spectral_norm(
-        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=True)
-    )
+    return spectral_norm(nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding, bias=True))
 
 
 def _down_block(in_channels: int, out_channels: int) -> nn.Sequential:
@@ -266,7 +267,9 @@ class DiscriminatorFeatures(nn.Module):
             _down_block(channels * 4, channels * 8),
         ]
         if image_size >= 128:
-            layers.extend([_down_block(channels * 8, channels * 16), _refine_block(channels * 16, channels * 8)])
+            layers.extend(
+                [_down_block(channels * 8, channels * 16), _refine_block(channels * 16, channels * 8)]
+            )
         if image_size >= 256:
             layers[-1:-1] = [_down_block(channels * 16, channels * 32)]
             layers[-1:] = [

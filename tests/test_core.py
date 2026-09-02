@@ -38,6 +38,14 @@ def test_all_masked_caption_is_rejected() -> None:
         memory(torch.randn(2, 4, 8, 8), torch.randn(2, 8, 3), torch.ones(2, 3, dtype=torch.bool))
 
 
+def test_mean_conditioning_mode_is_deterministic() -> None:
+    generator = DMGenerator(channels=4, memory_dim=8, residual_blocks=1).eval()
+    inputs = (torch.randn(2, 100), torch.randn(2, 256), torch.randn(2, 256, 5))
+    first, _, _, _ = generator(*inputs, sample_conditioning=False)
+    second, _, _, _ = generator(*inputs, sample_conditioning=False)
+    assert all(torch.equal(left, right) for left, right in zip(first, second, strict=True))
+
+
 def test_adversarial_and_kl_backward() -> None:
     torch.manual_seed(11)
     generator = DMGenerator(channels=4, memory_dim=8, residual_blocks=1)
@@ -50,9 +58,7 @@ def test_adversarial_and_kl_backward() -> None:
     for discriminator, real_image, fake_image in zip(discriminators, real, images, strict=True):
         loss, _ = discriminator_loss(discriminator, real_image, fake_image, sentence)
         assert torch.isfinite(loss)
-    loss, metrics = generator_loss(
-        list(discriminators), images, sentence, mu, logvar, matching_lambda=0.0
-    )
+    loss, metrics = generator_loss(list(discriminators), images, sentence, mu, logvar, matching_lambda=0.0)
     loss.backward()
     assert torch.isfinite(loss)
     assert "kl" in metrics

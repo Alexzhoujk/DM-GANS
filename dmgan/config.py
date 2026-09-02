@@ -31,6 +31,8 @@ class DMGANConfig:
     gamma3: float = 10.0
     matching_lambda: float = 5.0
     kl_lambda: float = 1.0
+    contrastive_lambda: float = 0.0
+    contrastive_temperature: float = 0.5
     seed: int = 20260824
 
     def validate(self) -> None:
@@ -40,6 +42,10 @@ class DMGANConfig:
             raise ValueError("Official DM-GAN uses memory_dim = 2 * generator_channels")
         if self.batch_size < 2:
             raise ValueError("Matching-aware discriminator loss requires batch_size >= 2")
+        if self.contrastive_lambda < 0:
+            raise ValueError("contrastive_lambda must be non-negative")
+        if self.contrastive_temperature <= 0:
+            raise ValueError("contrastive_temperature must be positive")
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
