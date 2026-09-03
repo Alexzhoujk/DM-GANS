@@ -27,9 +27,10 @@ These results must not be presented as interchangeable.
 
 The controlled three-seed comparison did **not demonstrate that the tested
 part-aware method is better**. The directly optimized attention proxy improved,
-but part-colour accuracy did not improve reliably; FID changed from 16.0544 to
-16.0902 and R-precision was essentially unchanged. See the Session 7 completion
-report for the paired confidence intervals and the boundary of this conclusion.
+but part-colour accuracy did not improve reliably; mean FID changed from 16.0544
+(baseline) to 16.0902 (part-aware), a delta of +0.0358, while DAMSM R-precision
+changed by only +0.0489 percentage points. See the Session 7 completion report
+for the paired confidence intervals and the boundary of this conclusion.
 
 ## Session 6 deliverables
 

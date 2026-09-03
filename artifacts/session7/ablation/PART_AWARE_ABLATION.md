@@ -31,8 +31,8 @@ same warmed-up discriminators; the only objective difference is
 
 ## Aggregate paired effects
 
-- Mean FID delta (part - baseline): +0.036
-- R-precision delta: +0.05 pp,
+- Mean FID delta (part - baseline): +0.0358
+- DAMSM R-precision delta: +0.0489 pp,
   cluster-bootstrap 95% CI [-0.05,
   +0.16]
 - Part-colour swap accuracy delta: -0.05 pp,

@@ -10,8 +10,8 @@ This document records the final-week controlled experiment that asked:
 **NOT DEMONSTRATED.** Under the fixed protocol below, the part-aware auxiliary
 loss improved the attention quantity that it directly optimizes, but it did not
 produce a reliable improvement in the generated image's part-colour
-relationship. Global text alignment was essentially unchanged and FID became
-slightly worse.
+relationship. DAMSM R-precision changed by +0.0489 percentage points, while
+mean FID became slightly worse by +0.0358.
 
 This wording is deliberate. The experiment does **not** prove that every
 part-aware method is ineffective. It shows that this implementation, loss
@@ -132,8 +132,8 @@ measurably better part-colour relationship in generated images.
 ## Relationship to the Session 6 baseline result
 
 The Session 6 evaluation remains the baseline-reproduction anchor: the official
-generator evaluated through this modern code path reached FID 15.7576 and
-DAMSM R-precision 76.67% +/- 0.83% on 30,000 fixed samples, close to the
+generator evaluated through this modern code path reached PyTorch FID 15.7576
+and DAMSM R-precision 76.67% +/- 0.83% on 30,000 fixed samples, close to the
 author-reported pretrained references of 15.34 and 76.58% +/- 0.53%.
 
 That result supports compatibility of the modern inference/evaluation path. It
